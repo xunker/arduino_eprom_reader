@@ -1,29 +1,67 @@
 /*
-  Python:
+  WIRING:
 
-  #!/usr/bin/env python
-  import serial
-  import re
-  ser = serial.Serial('/dev/tty.usbmodemfa132121', 9600, 8, parity=serial.PARITY_NONE, timeout=1, rtscts=1, dsrdtr=1)
+  AM27C256 pin
+  ------------------------------------
+  14            Ground
+  28            +5v
 
-  buffer_size=512
-  f = open('dump.bin', 'w', buffer_size)
+  Both 74HC595s
+  ------------------------------------
+  8             Ground
+  16            +5v
+  13            Ground
+  10            +5v
 
-  pattern = re.compile("^\d\d\d\d\d\d\d\d$")
+  Arduino pin   AM27C256 pin
+  ------------------------------------
+  A0            22 Output enable (OE)
+  A1            10 Chip enable (CE)
+  2             11 DQ0
+  3             12 DQ1
+  4             13 DQ2
+  5             15 DQ3
+  6             16 DQ4
+  7             17 DQ5
+  8             18 DQ6
+  9             19 DQ7
 
-  line = 'start'
-  while (line):
-    line = ser.readline().strip()
+  Arduino pin   1st 74HC595
+  ------------------------------------
+  A2            14 SER/Data
+  A3            11 Clock/SRCLK/SH_CP
+  A4            12 Latch/RCLK/ST_CP
 
-    print line
-    if pattern.match(line):
-      f.write(chr(int(line, 2)))
+  1st 74HC595   2nd 74HC595
+  ------------------------------------
+  12 Latch      12 Latch
+  11 Clock      11 Clock
+  9  QH'        14 SER/Data
 
-    if line == "DONE!":
-      line = ""
+  1st 74HC595   AM27C256 pin
+  ------------------------------------
+  15 QA         10 Address 0
+  1  QB         9  Address 1
+  2  QC         8  Address 2
+  3  QD         7  Address 3
+  4  QE         6  Address 4
+  5  QF         5  Address 5
+  6  QG         4  Address 6
+  7  QH         3  Address 7
+
+  2nd 74HC595   AM27C256 pin
+  ------------------------------------
+  15 QA         25 Address 8
+  1  QB         24 Address 9
+  2  QC         21 Address 10
+  3  QD         23 Address 11
+  4  QE         2  Address 12
+  5  QF         26 Address 13
+  6  QG         27 Address 14
+  7  QH         Not Connected
 
 */
-  
+
 #define OE A0
 #define CE A1
 
